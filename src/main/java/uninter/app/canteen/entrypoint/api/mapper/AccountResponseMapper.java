@@ -17,12 +17,12 @@ public class AccountResponseMapper {
         return AccountResponse.builder()
             .id(account.getId())
             .owner(new OwnerResponse(account.getOwner().name()))
-            .purchases(toResponse(account.getPurchases()))
+            .purchases(toPurchaseResponse(account.getPurchases()))
             .totalBalance(account.getTotalBalance())
             .build();
     }
 
-    private List<PurchaseResponse> toResponse(List<Purchase> purchases) {
+    private List<PurchaseResponse> toPurchaseResponse(List<Purchase> purchases) {
         return purchases.stream()
             .map(purchase -> new PurchaseResponse(purchase.amount(), purchase.purchasedIn()))
             .collect(Collectors.toList());

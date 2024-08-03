@@ -1,3 +1,6 @@
 spring:
     application:
         name: canteen
+    data:
+        mongodb:
+            uri: ${MONGODB_URI_CONNECTION}

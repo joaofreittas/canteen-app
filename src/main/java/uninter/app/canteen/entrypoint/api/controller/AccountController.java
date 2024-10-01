@@ -16,8 +16,11 @@ import uninter.app.canteen.entrypoint.api.dto.PayAccountBalanceRequest;
 import uninter.app.canteen.entrypoint.api.dto.RegisterPurchaseRequest;
 import uninter.app.canteen.entrypoint.api.facade.CreateAccountFacade;
 import uninter.app.canteen.entrypoint.api.facade.GetAccountReportFacade;
+import uninter.app.canteen.entrypoint.api.facade.GetAccountsFacade;
 import uninter.app.canteen.entrypoint.api.facade.PayAccountBalanceFacade;
 import uninter.app.canteen.entrypoint.api.facade.RegisterPurchaseFacade;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/v1/account")
@@ -28,6 +31,12 @@ public class AccountController {
     private final RegisterPurchaseFacade registerPurchaseFacade;
     private final GetAccountReportFacade getAccountReportFacade;
     private final PayAccountBalanceFacade payAccountBalanceFacade;
+    private final GetAccountsFacade getAccountsFacade;
+
+    @GetMapping
+    public List<AccountResponse> getAccounts() {
+        return getAccountsFacade.process();
+    }
 
     @GetMapping("/{accountId}")
     public AccountResponse getAccountReport(@PathVariable String accountId) {

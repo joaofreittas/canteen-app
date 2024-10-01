@@ -15,8 +15,8 @@ public class GetAccountReportFacade {
     private final AccountResponseMapper mapper;
 
     public AccountResponse process(String accountId) {
-        final var commmand = new GetAccountReportCommand(accountId);
-        final var account = getAccountReportUseCase.execute(commmand);
+        final var command = new GetAccountReportCommand(accountId);
+        final var account = getAccountReportUseCase.execute(command);
 
         return mapper.toResponse(account);
     }

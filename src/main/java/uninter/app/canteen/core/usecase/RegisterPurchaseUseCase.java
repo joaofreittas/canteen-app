@@ -26,8 +26,9 @@ public class RegisterPurchaseUseCase {
         var account = accountOptional.get();
         final var purchase = new Purchase(command.amount(), LocalDateTime.now());
         account.registerPurchase(purchase);
+        accountGateway.save(account);
 
-        return accountGateway.save(account);
+        return account;
     }
 
 }

@@ -8,18 +8,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uninter.app.canteen.core.common.exceptions.NotFoundAccountException;
 import uninter.app.canteen.core.domain.Account;
 import uninter.app.canteen.core.domain.Owner;
-import uninter.app.canteen.core.domain.Purchase;
 import uninter.app.canteen.core.gateway.AccountGateway;
 import uninter.app.canteen.core.usecase.command.RegisterPurchaseCommand;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -42,19 +40,16 @@ public class RegisterPurchaseUseCaseTest {
             .owner(owner)
             .build();
 
-        final var purchases = List.of(new Purchase(command.amount(), LocalDateTime.now()));
-        final var accountExpected = Account.builder()
-            .purchases(purchases)
-            .owner(owner)
-            .build();
-
         when(accountGateway.findById("1")).thenReturn(Optional.of(account));
-        when(accountGateway.save(any(Account.class))).thenReturn(accountExpected);
 
         var response = registerPurchaseUseCase.execute(command);
 
-        assertEquals(accountExpected.getTotalBalance(), response.getTotalBalance());
-        assertEquals(accountExpected.getOwnerName(), response.getOwnerName());
+        assertFalse(response.getPurchases().isEmpty());
+        assertFalse(response.getTotalBalance().compareTo(BigDecimal.ZERO) == 0);
+        assertEquals(new BigDecimal(10.0), response.getTotalBalance());
+        assertEquals(owner.name(), response.getOwnerName());
+        verify(accountGateway).save(response);
+        verify(accountGateway).findById("1");
     }
 
     @Test
